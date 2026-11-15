@@ -1,0 +1,42 @@
+# Exemple : Nextcloud + MariaDB + Redis (les secrets sont dans .env, non versionné)
+services:
+  db:
+    image: mariadb:11
+    restart: unless-stopped
+    command: --transaction-isolation=READ-COMMITTED --log-bin=binlog --binlog-format=ROW
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - ./db:/var/lib/mysql
+
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+
+  app:
+    image: nextcloud:stable
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8081:80"   # joignable seulement via le reverse proxy
+    environment:
+      MYSQL_HOST: db
+      MYSQL_DATABASE: nextcloud
+      MYSQL_USER: nextcloud
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      REDIS_HOST: redis
+    volumes:
+      - ./html:/var/www/html
+      - /srv/cloud:/var/www/html/data   # disque dédié aux données
+    depends_on: [db, redis]
+
+  cron:
+    image: nextcloud:stable
+    restart: unless-stopped
+    entrypoint: /cron.sh
+    volumes:
+      - ./html:/var/www/html
+      - /srv/cloud:/var/www/html/data
+    depends_on: [db, redis]

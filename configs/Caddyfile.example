@@ -1,0 +1,12 @@
+# Un nom local par service (servi par le DNS de pfSense)
+http://accueil.home.lab {
+	reverse_proxy homepage:3000
+}
+
+http://cloud.home.lab {
+	reverse_proxy nextcloud-app-1:80
+}
+
+http://soc.home.lab {
+	reverse_proxy monsoc:8080
+}
