@@ -1,4 +1,4 @@
-# 🛡️ Homelab – réseau familial sécurisé par pfSense
+<p align="center"><img src="docs/banner.svg" alt="🛡️ Homelab – réseau familial sécurisé par pfSense" width="100%"></p>
 
 > Un vrai réseau, utilisé tous les jours par ma famille, que je conçois, sécurise, supervise et audite moi-même.
 
